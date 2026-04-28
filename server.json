@@ -6,12 +6,12 @@
     "url": "https://github.com/dontsovcmc/mcp-server-yandex-metrika",
     "source": "github"
   },
-  "version": "0.1.0",
+  "version": "0.1.1",
   "packages": [
     {
       "registryType": "pypi",
       "identifier": "mcp-server-yandex-metrika",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "transport": {
         "type": "stdio"
       },

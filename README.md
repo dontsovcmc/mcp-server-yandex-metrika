@@ -2,7 +2,7 @@
 
 # mcp-server-yandex-metrika
 
-[![Version](https://img.shields.io/badge/version-0.1.0-blue)](https://github.com/dontsovcmc/mcp-server-yandex-metrika)
+[![Version](https://img.shields.io/badge/version-0.1.1-blue)](https://github.com/dontsovcmc/mcp-server-yandex-metrika)
 
 MCP-сервер для работы с [API Яндекс Метрики](https://yandex.com/dev/metrika) через Claude Code, Claude Desktop и другие MCP-совместимые клиенты.
 

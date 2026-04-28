@@ -1,6 +1,6 @@
 [project]
 name = "mcp-server-yandex-metrika"
-version = "0.1.0"
+version = "0.1.1"
 description = "MCP server for Yandex Metrika API — counters, goals, reports, segments, logs"
 readme = "README.md"
 license = {text = "MIT"}
