@@ -1,0 +1,28 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.dontsovcmc/yandex-metrika",
+  "description": "MCP server for Yandex Metrika API — counters, goals, reports, segments, logs",
+  "repository": {
+    "url": "https://github.com/dontsovcmc/mcp-server-yandex-metrika",
+    "source": "github"
+  },
+  "version": "0.1.0",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "identifier": "mcp-server-yandex-metrika",
+      "version": "0.1.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "runtimeHint": "uvx",
+      "environmentVariables": [
+        {
+          "name": "YANDEX_METRIKA_TOKEN",
+          "isRequired": true,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}
