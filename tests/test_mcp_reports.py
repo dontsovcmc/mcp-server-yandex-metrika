@@ -1,6 +1,6 @@
 import json
 import pytest
-from unittest.mock import patch
+from unittest.mock import patch, AsyncMock
 from mcp.shared.memory import create_connected_server_and_client_session
 from mcp_server_yandex_metrika.server import mcp
 from mcp_server_yandex_metrika.models import ReportResponse, DrillDownReportResponse, ComparisonReportResponse, ByTimeReportResponse
@@ -15,7 +15,7 @@ MOCK_REPORT = {
 @pytest.mark.anyio
 async def test_ym_stat_data():
     with patch("mcp_server_yandex_metrika.server.MetrikaAPI") as M:
-        M.return_value.get_stat_data.return_value = MOCK_REPORT
+        M.return_value.get_stat_data = AsyncMock(return_value=MOCK_REPORT)
         async with create_connected_server_and_client_session(mcp._mcp_server) as s:
             r = await s.call_tool("ym_stat_data", {"ids": "12345", "metrics": "ym:s:visits"})
             assert not r.isError
@@ -29,7 +29,7 @@ async def test_ym_stat_data():
 @pytest.mark.anyio
 async def test_ym_stat_data_with_filters():
     with patch("mcp_server_yandex_metrika.server.MetrikaAPI") as M:
-        M.return_value.get_stat_data.return_value = MOCK_REPORT
+        M.return_value.get_stat_data = AsyncMock(return_value=MOCK_REPORT)
         async with create_connected_server_and_client_session(mcp._mcp_server) as s:
             r = await s.call_tool("ym_stat_data", {
                 "ids": "12345", "metrics": "ym:s:visits",
@@ -49,7 +49,7 @@ async def test_ym_stat_data_bytime():
         "totals": [[30.0, 40.0]], "sampled": False,
     }
     with patch("mcp_server_yandex_metrika.server.MetrikaAPI") as M:
-        M.return_value.get_stat_data_bytime.return_value = mock
+        M.return_value.get_stat_data_bytime = AsyncMock(return_value=mock)
         async with create_connected_server_and_client_session(mcp._mcp_server) as s:
             r = await s.call_tool("ym_stat_data_bytime", {"ids": "12345", "metrics": "ym:s:visits"})
             assert not r.isError
@@ -65,9 +65,12 @@ async def test_ym_stat_data_drilldown():
         "total_rows": 1, "totals": [100.0],
     }
     with patch("mcp_server_yandex_metrika.server.MetrikaAPI") as M:
-        M.return_value.get_stat_data_drilldown.return_value = mock
+        M.return_value.get_stat_data_drilldown = AsyncMock(return_value=mock)
         async with create_connected_server_and_client_session(mcp._mcp_server) as s:
-            r = await s.call_tool("ym_stat_data_drilldown", {"ids": "12345", "metrics": "ym:s:visits"})
+            r = await s.call_tool("ym_execute", {
+                "action": "stat_data_drilldown",
+                "params_json": json.dumps({"ids": "12345", "metrics": "ym:s:visits"}),
+            })
             assert not r.isError
             parsed = DrillDownReportResponse(**json.loads(r.content[0].text))
             assert parsed.data[0].expand is True
@@ -81,9 +84,12 @@ async def test_ym_stat_data_comparison():
         "total_rows": 1, "totals": {"a": [100.0], "b": [200.0]},
     }
     with patch("mcp_server_yandex_metrika.server.MetrikaAPI") as M:
-        M.return_value.get_stat_data_comparison.return_value = mock
+        M.return_value.get_stat_data_comparison = AsyncMock(return_value=mock)
         async with create_connected_server_and_client_session(mcp._mcp_server) as s:
-            r = await s.call_tool("ym_stat_data_comparison", {"ids": "12345", "metrics": "ym:s:visits"})
+            r = await s.call_tool("ym_execute", {
+                "action": "stat_data_comparison",
+                "params_json": json.dumps({"ids": "12345", "metrics": "ym:s:visits"}),
+            })
             assert not r.isError
             parsed = ComparisonReportResponse(**json.loads(r.content[0].text))
             assert parsed.totals["a"] == [100.0]
@@ -92,7 +98,10 @@ async def test_ym_stat_data_comparison():
 @pytest.mark.anyio
 async def test_ym_stat_data_comparison_drilldown():
     with patch("mcp_server_yandex_metrika.server.MetrikaAPI") as M:
-        M.return_value.get_stat_data_comparison_drilldown.return_value = MOCK_REPORT
+        M.return_value.get_stat_data_comparison_drilldown = AsyncMock(return_value=MOCK_REPORT)
         async with create_connected_server_and_client_session(mcp._mcp_server) as s:
-            r = await s.call_tool("ym_stat_data_comparison_drilldown", {"ids": "12345", "metrics": "ym:s:visits"})
+            r = await s.call_tool("ym_execute", {
+                "action": "stat_data_comparison_drilldown",
+                "params_json": json.dumps({"ids": "12345", "metrics": "ym:s:visits"}),
+            })
             assert not r.isError
