@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Optional
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 # ── Base ──────────────────────────────────────────────────────────
@@ -595,6 +595,754 @@ class SuccessResponse(MetrikaBaseModel):
     success: Optional[bool] = None
 
 
+# ── Parameter Models (for action registry) ───────────────────────
+
+
+class StatDataParams(BaseModel):
+    """Parameters for GET /stat/v1/data — table report."""
+
+    model_config = ConfigDict(extra="allow")
+
+    ids: str = Field(
+        ...,
+        description="Counter IDs, comma-separated (e.g. '12345,67890')",
+    )
+    metrics: str = Field(
+        ...,
+        description=(
+            "Metrics, comma-separated"
+            " (e.g. 'ym:s:visits,ym:s:users,ym:s:pageviews')"
+        ),
+    )
+    dimensions: str = Field(
+        default="",
+        description="Dimensions, comma-separated (e.g. 'ym:s:browser')",
+    )
+    date1: str = Field(
+        default="",
+        description=(
+            "Start date: YYYY-MM-DD or relative"
+            " ('today','yesterday','6daysAgo')"
+        ),
+    )
+    date2: str = Field(
+        default="",
+        description="End date: YYYY-MM-DD or relative ('today','yesterday')",
+    )
+    filters: str = Field(
+        default="",
+        description="Filter expression (e.g. \"ym:s:browser=='Chrome'\")",
+    )
+    limit: int = Field(
+        default=100,
+        ge=1,
+        le=100000,
+        description="Max rows to return (1-100000)",
+    )
+    offset: int = Field(
+        default=1,
+        ge=1,
+        description="Offset for pagination (starts from 1)",
+    )
+    sort: str = Field(
+        default="",
+        description="Sort field with optional - prefix (e.g. '-ym:s:visits')",
+    )
+    preset: str = Field(
+        default="",
+        description="Report preset name",
+    )
+    accuracy: str = Field(
+        default="",
+        description="Accuracy: 'low','medium','high','full' or 0.0-1.0",
+    )
+    lang: str = Field(
+        default="",
+        description="Language: 'ru', 'en', 'tr'",
+    )
+    include_undefined: bool = Field(
+        default=False,
+        description="Include undefined values in report",
+    )
+    timezone: str = Field(
+        default="",
+        description="Timezone offset (e.g. '+03:00')",
+    )
+
+
+class StatByTimeParams(BaseModel):
+    """Parameters for GET /stat/v1/data/bytime — time-series report."""
+
+    model_config = ConfigDict(extra="allow")
+
+    ids: str = Field(
+        ...,
+        description="Counter IDs, comma-separated (e.g. '12345,67890')",
+    )
+    metrics: str = Field(
+        ...,
+        description=(
+            "Metrics, comma-separated"
+            " (e.g. 'ym:s:visits,ym:s:users,ym:s:pageviews')"
+        ),
+    )
+    dimensions: str = Field(
+        default="",
+        description="Dimensions, comma-separated (e.g. 'ym:s:browser')",
+    )
+    date1: str = Field(
+        default="",
+        description=(
+            "Start date: YYYY-MM-DD or relative"
+            " ('today','yesterday','6daysAgo')"
+        ),
+    )
+    date2: str = Field(
+        default="",
+        description="End date: YYYY-MM-DD or relative ('today','yesterday')",
+    )
+    filters: str = Field(
+        default="",
+        description="Filter expression (e.g. \"ym:s:browser=='Chrome'\")",
+    )
+    limit: int = Field(
+        default=100,
+        ge=1,
+        le=100000,
+        description="Max rows to return (1-100000)",
+    )
+    offset: int = Field(
+        default=1,
+        ge=1,
+        description="Offset for pagination (starts from 1)",
+    )
+    sort: str = Field(
+        default="",
+        description="Sort field with optional - prefix (e.g. '-ym:s:visits')",
+    )
+    lang: str = Field(
+        default="",
+        description="Language: 'ru', 'en', 'tr'",
+    )
+    group: str = Field(
+        default="day",
+        description=(
+            "Time grouping:"
+            " all/auto/minutes/hour/day/week/month/quarter/year"
+        ),
+    )
+    top_keys: int = Field(
+        default=7,
+        ge=1,
+        le=30,
+        description="Number of top keys (1-30)",
+    )
+
+
+class StatDrilldownParams(BaseModel):
+    """Parameters for GET /stat/v1/data/drilldown — drill down report."""
+
+    model_config = ConfigDict(extra="allow")
+
+    ids: str = Field(
+        ...,
+        description="Counter IDs, comma-separated (e.g. '12345,67890')",
+    )
+    metrics: str = Field(
+        ...,
+        description=(
+            "Metrics, comma-separated"
+            " (e.g. 'ym:s:visits,ym:s:users,ym:s:pageviews')"
+        ),
+    )
+    dimensions: str = Field(
+        default="",
+        description="Dimensions, comma-separated (e.g. 'ym:s:browser')",
+    )
+    date1: str = Field(
+        default="",
+        description=(
+            "Start date: YYYY-MM-DD or relative"
+            " ('today','yesterday','6daysAgo')"
+        ),
+    )
+    date2: str = Field(
+        default="",
+        description="End date: YYYY-MM-DD or relative ('today','yesterday')",
+    )
+    filters: str = Field(
+        default="",
+        description="Filter expression (e.g. \"ym:s:browser=='Chrome'\")",
+    )
+    limit: int = Field(
+        default=100,
+        ge=1,
+        le=100000,
+        description="Max rows to return (1-100000)",
+    )
+    offset: int = Field(
+        default=1,
+        ge=1,
+        description="Offset for pagination (starts from 1)",
+    )
+    sort: str = Field(
+        default="",
+        description="Sort field with optional - prefix (e.g. '-ym:s:visits')",
+    )
+    lang: str = Field(
+        default="",
+        description="Language: 'ru', 'en', 'tr'",
+    )
+    parent_id: str = Field(
+        default="",
+        description="Parent ID for drill down (JSON array of keys)",
+    )
+
+
+class StatComparisonParams(BaseModel):
+    """Parameters for GET /stat/v1/data/comparison — comparison report."""
+
+    model_config = ConfigDict(extra="allow")
+
+    ids: str = Field(
+        ...,
+        description="Counter IDs, comma-separated (e.g. '12345,67890')",
+    )
+    metrics: str = Field(
+        ...,
+        description=(
+            "Metrics, comma-separated"
+            " (e.g. 'ym:s:visits,ym:s:users,ym:s:pageviews')"
+        ),
+    )
+    dimensions: str = Field(
+        default="",
+        description="Dimensions, comma-separated (e.g. 'ym:s:browser')",
+    )
+    date1_a: str = Field(
+        default="",
+        description="Segment A start date: YYYY-MM-DD or relative",
+    )
+    date2_a: str = Field(
+        default="",
+        description="Segment A end date: YYYY-MM-DD or relative",
+    )
+    date1_b: str = Field(
+        default="",
+        description="Segment B start date: YYYY-MM-DD or relative",
+    )
+    date2_b: str = Field(
+        default="",
+        description="Segment B end date: YYYY-MM-DD or relative",
+    )
+    filters_a: str = Field(
+        default="",
+        description="Filter expression for segment A",
+    )
+    filters_b: str = Field(
+        default="",
+        description="Filter expression for segment B",
+    )
+    limit: int = Field(
+        default=100,
+        ge=1,
+        le=100000,
+        description="Max rows to return (1-100000)",
+    )
+    offset: int = Field(
+        default=1,
+        ge=1,
+        description="Offset for pagination (starts from 1)",
+    )
+    sort: str = Field(
+        default="",
+        description="Sort field with optional - prefix (e.g. '-ym:s:visits')",
+    )
+    lang: str = Field(
+        default="",
+        description="Language: 'ru', 'en', 'tr'",
+    )
+    parent_id: str = Field(
+        default="",
+        description=(
+            "Parent ID for drill down variant (JSON array of keys)"
+        ),
+    )
+
+
+class CounterCreateParams(BaseModel):
+    """Parameters for POST /management/v1/counters — create counter."""
+
+    model_config = ConfigDict(extra="allow")
+
+    name: str = Field(
+        ...,
+        description="Counter name (e.g. 'My Website')",
+    )
+    site: str = Field(
+        ...,
+        description="Website domain (e.g. 'example.com')",
+    )
+    time_zone_name: str = Field(
+        default="Europe/Moscow",
+        description="Timezone (e.g. 'Europe/Moscow', 'UTC')",
+    )
+
+
+class CounterUpdateParams(BaseModel):
+    """Parameters for PUT /management/v1/counter/{id} — update counter."""
+
+    model_config = ConfigDict(extra="allow")
+
+    name: str = Field(
+        default="",
+        description="New counter name",
+    )
+    site: str = Field(
+        default="",
+        description="New website domain (e.g. 'example.com')",
+    )
+    time_zone_name: str = Field(
+        default="",
+        description="New timezone (e.g. 'Europe/Moscow', 'UTC')",
+    )
+
+
+class GoalCreateParams(BaseModel):
+    """Parameters for POST /management/v1/counter/{id}/goals — create goal."""
+
+    model_config = ConfigDict(extra="allow")
+
+    name: str = Field(
+        ...,
+        description="Goal name (e.g. 'Purchase completed')",
+    )
+    goal_type: str = Field(
+        ...,
+        description=(
+            "Type: url/number/step/action/visit_duration/phone/email"
+            "/search/messenger/file/social/chat/payment_system"
+        ),
+    )
+    conditions_json: str = Field(
+        default="",
+        description=(
+            "Conditions as JSON array"
+            ' (e.g. \'[{"type":"contain","url":"/thank"}]\')'
+        ),
+    )
+    depth: int = Field(
+        default=0,
+        description="Page depth (for 'number' type, e.g. 3)",
+    )
+    duration: int = Field(
+        default=0,
+        description="Visit duration in seconds (for 'visit_duration' type)",
+    )
+    default_price: float = Field(
+        default=0,
+        description="Default goal value (e.g. 100.0)",
+    )
+    is_favorite: bool = Field(
+        default=False,
+        description="Mark goal as favorite",
+    )
+
+
+class GoalUpdateParams(BaseModel):
+    """Parameters for PUT /management/v1/counter/{id}/goal/{gid} — update goal."""
+
+    model_config = ConfigDict(extra="allow")
+
+    name: str = Field(
+        default="",
+        description="New goal name",
+    )
+    goal_type: str = Field(
+        default="",
+        description=(
+            "Type: url/number/step/action/visit_duration/phone/email"
+            "/search/messenger/file/social/chat/payment_system"
+        ),
+    )
+    conditions_json: str = Field(
+        default="",
+        description=(
+            "Conditions as JSON array"
+            ' (e.g. \'[{"type":"contain","url":"/thank"}]\')'
+        ),
+    )
+    depth: int = Field(
+        default=0,
+        description="Page depth (for 'number' type)",
+    )
+    duration: int = Field(
+        default=0,
+        description="Visit duration in seconds (for 'visit_duration' type)",
+    )
+    default_price: float = Field(
+        default=0,
+        description="Default goal value",
+    )
+    is_favorite: bool = Field(
+        default=False,
+        description="Mark goal as favorite",
+    )
+
+
+class FilterCreateParams(BaseModel):
+    """Parameters for POST /management/v1/counter/{id}/filters — create filter."""
+
+    model_config = ConfigDict(extra="allow")
+
+    attr: str = Field(
+        ...,
+        description=(
+            "Attribute: title/client_ip/url/referer/uniq_id"
+        ),
+    )
+    filter_type: str = Field(
+        ...,
+        description=(
+            "Type: equal/start/contain/interval/me/only_mirrors/regexp"
+        ),
+    )
+    value: str = Field(
+        default="",
+        description="Filter value (e.g. 'bot' for title contain)",
+    )
+    action: str = Field(
+        default="exclude",
+        description="Action: exclude/include",
+    )
+    status: str = Field(
+        default="active",
+        description="Status: active/disabled",
+    )
+    start_ip: str = Field(
+        default="",
+        description="Start IP address (for 'interval' type, e.g. '192.168.1.1')",
+    )
+    end_ip: str = Field(
+        default="",
+        description="End IP address (for 'interval' type, e.g. '192.168.1.255')",
+    )
+
+
+class FilterUpdateParams(BaseModel):
+    """Parameters for PUT /management/v1/counter/{id}/filter/{fid} — update filter."""
+
+    model_config = ConfigDict(extra="allow")
+
+    attr: str = Field(
+        default="",
+        description="Attribute: title/client_ip/url/referer/uniq_id",
+    )
+    filter_type: str = Field(
+        default="",
+        description=(
+            "Type: equal/start/contain/interval/me/only_mirrors/regexp"
+        ),
+    )
+    value: str = Field(
+        default="",
+        description="Filter value",
+    )
+    action: str = Field(
+        default="",
+        description="Action: exclude/include",
+    )
+    status: str = Field(
+        default="",
+        description="Status: active/disabled",
+    )
+    start_ip: str = Field(
+        default="",
+        description="Start IP address (for 'interval' type)",
+    )
+    end_ip: str = Field(
+        default="",
+        description="End IP address (for 'interval' type)",
+    )
+
+
+class GrantCreateParams(BaseModel):
+    """Parameters for POST /management/v1/counter/{id}/grants — create grant."""
+
+    model_config = ConfigDict(extra="allow")
+
+    user_login: str = Field(
+        ...,
+        description="Yandex login to grant access (e.g. 'john.doe')",
+    )
+    perm: str = Field(
+        ...,
+        description="Permission: public_stat/view/edit",
+    )
+    comment: str = Field(
+        default="",
+        description="Comment for the grant",
+    )
+
+
+class SegmentCreateParams(BaseModel):
+    """Parameters for POST /management/v1/counter/{id}/apisegment/segments — create segment."""
+
+    model_config = ConfigDict(extra="allow")
+
+    name: str = Field(
+        ...,
+        max_length=255,
+        description="Segment name (1-255 chars, e.g. 'Chrome Users')",
+    )
+    expression: str = Field(
+        ...,
+        max_length=65535,
+        description=(
+            "Segment expression"
+            " (e.g. \"ym:s:browser=='Chrome'\")"
+        ),
+    )
+
+
+class SegmentUpdateParams(BaseModel):
+    """Parameters for PUT /management/v1/counter/{id}/apisegment/segment/{sid} — update segment."""
+
+    model_config = ConfigDict(extra="allow")
+
+    name: str = Field(
+        default="",
+        max_length=255,
+        description="New segment name (1-255 chars)",
+    )
+    expression: str = Field(
+        default="",
+        max_length=65535,
+        description="New segment expression",
+    )
+
+
+class OperationCreateParams(BaseModel):
+    """Parameters for POST /management/v1/counter/{id}/operations — create operation."""
+
+    model_config = ConfigDict(extra="allow")
+
+    action: str = Field(
+        ...,
+        description=(
+            "Action: cut_fragment/cut_parameter/cut_all_parameters"
+            "/merge_https_and_http/to_lower/replace_domain"
+        ),
+    )
+    attr: str = Field(
+        ...,
+        description="Attribute: referer/url",
+    )
+    value: str = Field(
+        ...,
+        description="Value for the operation (e.g. 'utm_source')",
+    )
+
+
+class OperationUpdateParams(BaseModel):
+    """Parameters for PUT /management/v1/counter/{id}/operation/{oid} — update operation."""
+
+    model_config = ConfigDict(extra="allow")
+
+    action: str = Field(
+        default="",
+        description=(
+            "Action: cut_fragment/cut_parameter/cut_all_parameters"
+            "/merge_https_and_http/to_lower/replace_domain"
+        ),
+    )
+    attr: str = Field(
+        default="",
+        description="Attribute: referer/url",
+    )
+    value: str = Field(
+        default="",
+        description="Value for the operation",
+    )
+    status: str = Field(
+        default="",
+        description="Status: active/disabled",
+    )
+
+
+class LabelCreateParams(BaseModel):
+    """Parameters for POST /management/v1/labels — create label."""
+
+    model_config = ConfigDict(extra="allow")
+
+    name: str = Field(
+        ...,
+        max_length=255,
+        description="Label name (e.g. 'Production Sites')",
+    )
+
+
+class AnnotationCreateParams(BaseModel):
+    """Parameters for POST /management/v1/counter/{id}/chart_annotations — create annotation."""
+
+    model_config = ConfigDict(extra="allow")
+
+    date: str = Field(
+        ...,
+        description="Date in YYYY-MM-DD format (e.g. '2024-01-15')",
+    )
+    title: str = Field(
+        ...,
+        description="Annotation title (e.g. 'New landing page launched')",
+    )
+    message: str = Field(
+        default="",
+        description="Annotation message with additional details",
+    )
+    group: str = Field(
+        default="A",
+        description="Group: A/B/C/D/E/HOLIDAY",
+    )
+
+
+class AnnotationUpdateParams(BaseModel):
+    """Parameters for PUT /management/v1/counter/{id}/chart_annotation/{aid} — update annotation."""
+
+    model_config = ConfigDict(extra="allow")
+
+    date: str = Field(
+        default="",
+        description="Date in YYYY-MM-DD format",
+    )
+    title: str = Field(
+        default="",
+        description="Annotation title",
+    )
+    message: str = Field(
+        default="",
+        description="Annotation message",
+    )
+    group: str = Field(
+        default="",
+        description="Group: A/B/C/D/E/HOLIDAY",
+    )
+
+
+class AccessFilterCreateParams(BaseModel):
+    """Parameters for POST /management/v1/counter/{id}/access/filters — create access filter."""
+
+    model_config = ConfigDict(extra="allow")
+
+    name: str = Field(
+        ...,
+        description="Filter name (1-255 chars, e.g. 'Only organic traffic')",
+    )
+    expression: str = Field(
+        ...,
+        description=(
+            "Filter expression (1-65535 chars,"
+            " e.g. \"ym:s:trafficSource=='organic'\")"
+        ),
+    )
+    interface_value: str = Field(
+        default="",
+        description="Interface value",
+    )
+
+
+class AccessFilterUpdateParams(BaseModel):
+    """Parameters for PUT /management/v1/counter/{id}/access/filter/{fid} — update access filter."""
+
+    model_config = ConfigDict(extra="allow")
+
+    name: str = Field(
+        default="",
+        description="Filter name (1-255 chars)",
+    )
+    expression: str = Field(
+        default="",
+        description="Filter expression (1-65535 chars)",
+    )
+    interface_value: str = Field(
+        default="",
+        description="Interface value",
+    )
+
+
+class LogRequestCreateParams(BaseModel):
+    """Parameters for POST /management/v1/counter/{id}/logrequests — create log request."""
+
+    model_config = ConfigDict(extra="allow")
+
+    date1: str = Field(
+        ...,
+        description="Start date in YYYY-MM-DD format (e.g. '2024-01-01')",
+    )
+    date2: str = Field(
+        ...,
+        description="End date in YYYY-MM-DD format (e.g. '2024-01-31')",
+    )
+    fields: str = Field(
+        ...,
+        description=(
+            "Fields, comma-separated"
+            " (e.g. 'ym:s:date,ym:s:visitID,ym:s:watchIDs')"
+        ),
+    )
+    source: str = Field(
+        ...,
+        description="Data source: 'hits' or 'visits'",
+    )
+    attribution: str = Field(
+        default="LASTSIGN",
+        description=(
+            "Attribution model:"
+            " FIRST/LAST/LASTSIGN/LAST_YANDEX_DIRECT_CLICK"
+        ),
+    )
+
+
+class LogRequestEvaluateParams(BaseModel):
+    """Parameters for GET /management/v1/counter/{id}/logrequests/evaluate — evaluate log request."""
+
+    model_config = ConfigDict(extra="allow")
+
+    date1: str = Field(
+        ...,
+        description="Start date in YYYY-MM-DD format (e.g. '2024-01-01')",
+    )
+    date2: str = Field(
+        ...,
+        description="End date in YYYY-MM-DD format (e.g. '2024-01-31')",
+    )
+    fields: str = Field(
+        ...,
+        description=(
+            "Fields, comma-separated"
+            " (e.g. 'ym:s:date,ym:s:visitID,ym:s:watchIDs')"
+        ),
+    )
+    source: str = Field(
+        ...,
+        description="Data source: 'hits' or 'visits'",
+    )
+
+
+class DelegateAddParams(BaseModel):
+    """Parameters for POST /management/v1/delegates — add delegate."""
+
+    model_config = ConfigDict(extra="allow")
+
+    user_login: str = Field(
+        ...,
+        description="Yandex login (e.g. 'john.doe')",
+    )
+    comment: str = Field(
+        default="",
+        description="Comment for the delegate",
+    )
+
+
 # ── Exports ───────────────────────────────────────────────────────
 
 __all__ = [
@@ -678,4 +1426,28 @@ __all__ = [
     "UploadListResponse",
     # Common
     "SuccessResponse",
+    # Parameter Models
+    "StatDataParams",
+    "StatByTimeParams",
+    "StatDrilldownParams",
+    "StatComparisonParams",
+    "CounterCreateParams",
+    "CounterUpdateParams",
+    "GoalCreateParams",
+    "GoalUpdateParams",
+    "FilterCreateParams",
+    "FilterUpdateParams",
+    "GrantCreateParams",
+    "SegmentCreateParams",
+    "SegmentUpdateParams",
+    "OperationCreateParams",
+    "OperationUpdateParams",
+    "LabelCreateParams",
+    "AnnotationCreateParams",
+    "AnnotationUpdateParams",
+    "AccessFilterCreateParams",
+    "AccessFilterUpdateParams",
+    "LogRequestCreateParams",
+    "LogRequestEvaluateParams",
+    "DelegateAddParams",
 ]
