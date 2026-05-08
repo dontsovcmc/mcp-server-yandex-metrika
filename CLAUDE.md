@@ -10,6 +10,18 @@
 pip install -e ".[test]"
 ```
 
+### Загрузка переменных из файла
+
+```bash
+# MCP-сервер с env-файлом
+mcp-server-yandex-metrika --env /path/to/.env
+
+# CLI с env-файлом
+mcp-server-yandex-metrika --env /path/to/.env counters
+```
+
+`--env` загружает переменные через `python-dotenv` до инициализации сервера. Без `--env` — стандартные переменные окружения.
+
 ### Запуск тестов
 
 ```bash

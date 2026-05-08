@@ -18,6 +18,7 @@ def main(argv: list[str] | None = None):
         description="Яндекс Метрика: MCP-сервер и CLI",
     )
     parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
+    parser.add_argument("--env", metavar="PATH", help="Загрузить переменные окружения из файла (формат KEY=VALUE)")
 
     sub = parser.add_subparsers(dest="command")
 
