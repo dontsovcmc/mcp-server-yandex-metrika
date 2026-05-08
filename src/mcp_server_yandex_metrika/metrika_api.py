@@ -5,11 +5,9 @@ Base URL: https://api-metrika.yandex.net
 """
 
 import logging
-import sys
 
 import httpx
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s", stream=sys.stderr)
 log = logging.getLogger(__name__)
 
 BASE_URL = "https://api-metrika.yandex.net"

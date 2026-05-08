@@ -26,77 +26,77 @@ class MetrikaBaseModel(BaseModel):
 class CodeOptions(MetrikaBaseModel):
     """Настройки кода счётчика."""
 
-    async_flag: Optional[bool] = None
-    visor: Optional[bool] = None
-    clickmap: Optional[bool] = None
-    ecommerce: Optional[bool] = None
+    async_flag: Optional[bool] = Field(None, description="Асинхронная загрузка кода счётчика")
+    visor: Optional[bool] = Field(None, description="Включён ли Вебвизор")
+    clickmap: Optional[bool] = Field(None, description="Включена ли карта кликов")
+    ecommerce: Optional[bool] = Field(None, description="Включена ли электронная коммерция")
 
 
 class Site(MetrikaBaseModel):
     """Сайт счётчика."""
 
-    site: Optional[str] = None
+    site: Optional[str] = Field(None, description="Доменное имя сайта")
 
 
 class CounterBrief(MetrikaBaseModel):
     """Краткая информация о счётчике (из GET /management/v1/counters)."""
 
-    id: int
-    name: Optional[str] = None
-    site: Optional[str] = None
-    site2: Optional[Site] = None
-    type: Optional[str] = None
-    status: Optional[str] = None
-    owner_login: Optional[str] = None
-    permission: Optional[str] = None
-    create_time: Optional[str] = None
-    code_status: Optional[str] = None
-    mirrors2: Optional[list[Site]] = None
-    goals_count: Optional[int] = None
-    favorite: Optional[bool] = None
+    id: int = Field(..., description="Идентификатор счётчика")
+    name: Optional[str] = Field(None, description="Название счётчика")
+    site: Optional[str] = Field(None, description="Домен сайта")
+    site2: Optional[Site] = Field(None, description="Объект сайта с доп. информацией")
+    type: Optional[str] = Field(None, description="Тип счётчика (simple/partner)")
+    status: Optional[str] = Field(None, description="Статус счётчика (Active/Deleted)")
+    owner_login: Optional[str] = Field(None, description="Логин владельца счётчика")
+    permission: Optional[str] = Field(None, description="Уровень доступа (own/view/edit)")
+    create_time: Optional[str] = Field(None, description="Дата и время создания")
+    code_status: Optional[str] = Field(None, description="Статус установки кода (CS_OK/CS_NOT_FOUND и др.)")
+    mirrors2: Optional[list[Site]] = Field(None, description="Список зеркал сайта")
+    goals_count: Optional[int] = Field(None, description="Количество целей")
+    favorite: Optional[bool] = Field(None, description="Добавлен ли в избранное")
 
 
 class CounterFull(MetrikaBaseModel):
     """Полная информация о счётчике (из GET /management/v1/counter/{id})."""
 
-    id: Optional[int] = None
-    name: Optional[str] = None
-    site: Optional[str] = None
-    site2: Optional[Site] = None
-    type: Optional[str] = None
-    status: Optional[str] = None
-    owner_login: Optional[str] = None
-    permission: Optional[str] = None
-    create_time: Optional[str] = None
-    code_status: Optional[str] = None
-    code_options: Optional[CodeOptions] = None
-    mirrors2: Optional[list[Site]] = None
-    time_zone_name: Optional[str] = None
-    time_zone_offset: Optional[int] = None
-    favorite: Optional[bool] = None
-    goals: Optional[list] = None
-    filters: Optional[list] = None
-    operations: Optional[list] = None
-    grants: Optional[list] = None
+    id: Optional[int] = Field(None, description="Идентификатор счётчика")
+    name: Optional[str] = Field(None, description="Название счётчика")
+    site: Optional[str] = Field(None, description="Домен сайта")
+    site2: Optional[Site] = Field(None, description="Объект сайта с доп. информацией")
+    type: Optional[str] = Field(None, description="Тип счётчика (simple/partner)")
+    status: Optional[str] = Field(None, description="Статус счётчика (Active/Deleted)")
+    owner_login: Optional[str] = Field(None, description="Логин владельца счётчика")
+    permission: Optional[str] = Field(None, description="Уровень доступа (own/view/edit)")
+    create_time: Optional[str] = Field(None, description="Дата и время создания")
+    code_status: Optional[str] = Field(None, description="Статус установки кода (CS_OK/CS_NOT_FOUND и др.)")
+    code_options: Optional[CodeOptions] = Field(None, description="Настройки кода счётчика")
+    mirrors2: Optional[list[Site]] = Field(None, description="Список зеркал сайта")
+    time_zone_name: Optional[str] = Field(None, description="Часовой пояс (например Europe/Moscow)")
+    time_zone_offset: Optional[int] = Field(None, description="Смещение часового пояса в секундах")
+    favorite: Optional[bool] = Field(None, description="Добавлен ли в избранное")
+    goals: Optional[list] = Field(None, description="Список целей счётчика")
+    filters: Optional[list] = Field(None, description="Список фильтров счётчика")
+    operations: Optional[list] = Field(None, description="Список операций счётчика")
+    grants: Optional[list] = Field(None, description="Список разрешений на доступ")
 
 
 class CounterRequest(MetrikaBaseModel):
     """Запрос на создание/изменение счётчика."""
 
-    counter: dict
+    counter: dict = Field(..., description="Данные счётчика для создания или обновления")
 
 
 class CountersResponse(MetrikaBaseModel):
     """Ответ списка счётчиков."""
 
-    rows: Optional[int] = None
-    counters: Optional[list[CounterBrief]] = None
+    rows: Optional[int] = Field(None, description="Общее количество счётчиков")
+    counters: Optional[list[CounterBrief]] = Field(None, description="Список счётчиков")
 
 
 class CounterResponse(MetrikaBaseModel):
     """Ответ с одним счётчиком."""
 
-    counter: Optional[CounterFull] = None
+    counter: Optional[CounterFull] = Field(None, description="Данные счётчика")
 
 
 # ── Goal ──────────────────────────────────────────────────────────
@@ -105,43 +105,43 @@ class CounterResponse(MetrikaBaseModel):
 class GoalCondition(MetrikaBaseModel):
     """Условие цели."""
 
-    type: Optional[str] = None
-    url: Optional[str] = None
+    type: Optional[str] = Field(None, description="Тип условия (contain/exact/regexp и др.)")
+    url: Optional[str] = Field(None, description="URL или шаблон для сопоставления")
 
 
 class Goal(MetrikaBaseModel):
     """Цель счётчика."""
 
-    id: Optional[int] = None
-    name: Optional[str] = None
-    type: Optional[str] = None
-    default_price: Optional[float] = None
-    is_favorite: Optional[bool] = None
-    goal_source: Optional[str] = None
-    conditions: Optional[list[GoalCondition]] = None
-    depth: Optional[int] = None
-    duration: Optional[int] = None
-    steps: Optional[list] = None
-    flag: Optional[str] = None
-    hide_phone_number: Optional[bool] = None
+    id: Optional[int] = Field(None, description="Идентификатор цели")
+    name: Optional[str] = Field(None, description="Название цели")
+    type: Optional[str] = Field(None, description="Тип цели (url/number/step/action и др.)")
+    default_price: Optional[float] = Field(None, description="Ценность цели по умолчанию")
+    is_favorite: Optional[bool] = Field(None, description="Цель в избранном")
+    goal_source: Optional[str] = Field(None, description="Источник создания цели")
+    conditions: Optional[list[GoalCondition]] = Field(None, description="Список условий цели")
+    depth: Optional[int] = Field(None, description="Глубина просмотра (для типа number)")
+    duration: Optional[int] = Field(None, description="Длительность визита в секундах (для типа visit_duration)")
+    steps: Optional[list] = Field(None, description="Шаги составной цели (для типа step)")
+    flag: Optional[str] = Field(None, description="Флаг цели")
+    hide_phone_number: Optional[bool] = Field(None, description="Скрывать ли номер телефона")
 
 
 class GoalRequest(MetrikaBaseModel):
     """Запрос на создание/изменение цели."""
 
-    goal: Goal
+    goal: Goal = Field(..., description="Данные цели для создания или обновления")
 
 
 class GoalsResponse(MetrikaBaseModel):
     """Ответ списка целей."""
 
-    goals: Optional[list[Goal]] = None
+    goals: Optional[list[Goal]] = Field(None, description="Список целей")
 
 
 class GoalResponse(MetrikaBaseModel):
     """Ответ с одной целью."""
 
-    goal: Optional[Goal] = None
+    goal: Optional[Goal] = Field(None, description="Данные цели")
 
 
 # ── Filter ────────────────────────────────────────────────────────
@@ -150,33 +150,33 @@ class GoalResponse(MetrikaBaseModel):
 class FilterE(MetrikaBaseModel):
     """Фильтр счётчика."""
 
-    id: Optional[int] = None
-    attr: Optional[str] = None
-    type: Optional[str] = None
-    value: Optional[str] = None
-    action: Optional[str] = None
-    status: Optional[str] = None
-    start_ip: Optional[str] = None
-    end_ip: Optional[str] = None
-    with_subdomains: Optional[bool] = None
+    id: Optional[int] = Field(None, description="Идентификатор фильтра")
+    attr: Optional[str] = Field(None, description="Атрибут фильтрации (title/client_ip/url/referer/uniq_id)")
+    type: Optional[str] = Field(None, description="Тип фильтра (equal/start/contain/interval/regexp и др.)")
+    value: Optional[str] = Field(None, description="Значение фильтра")
+    action: Optional[str] = Field(None, description="Действие (exclude/include)")
+    status: Optional[str] = Field(None, description="Статус (active/disabled)")
+    start_ip: Optional[str] = Field(None, description="Начальный IP-адрес (для типа interval)")
+    end_ip: Optional[str] = Field(None, description="Конечный IP-адрес (для типа interval)")
+    with_subdomains: Optional[bool] = Field(None, description="Применять ли к поддоменам")
 
 
 class FilterRequest(MetrikaBaseModel):
     """Запрос на создание/изменение фильтра."""
 
-    filter: FilterE
+    filter: FilterE = Field(..., description="Данные фильтра для создания или обновления")
 
 
 class FiltersResponse(MetrikaBaseModel):
     """Ответ списка фильтров."""
 
-    filters: Optional[list[FilterE]] = None
+    filters: Optional[list[FilterE]] = Field(None, description="Список фильтров")
 
 
 class FilterResponse(MetrikaBaseModel):
     """Ответ с одним фильтром."""
 
-    filter: Optional[FilterE] = None
+    filter: Optional[FilterE] = Field(None, description="Данные фильтра")
 
 
 # ── Grant ─────────────────────────────────────────────────────────
@@ -185,31 +185,31 @@ class FilterResponse(MetrikaBaseModel):
 class Grant(MetrikaBaseModel):
     """Разрешение на доступ к счётчику."""
 
-    user_login: Optional[str] = None
-    user_uid: Optional[int] = None
-    perm: Optional[str] = None
-    created_at: Optional[str] = None
-    comment: Optional[str] = None
-    partner_data_access: Optional[bool] = None
-    access_filters: Optional[list] = None
+    user_login: Optional[str] = Field(None, description="Логин пользователя Яндекса")
+    user_uid: Optional[int] = Field(None, description="UID пользователя Яндекса")
+    perm: Optional[str] = Field(None, description="Уровень доступа (public_stat/view/edit)")
+    created_at: Optional[str] = Field(None, description="Дата создания разрешения")
+    comment: Optional[str] = Field(None, description="Комментарий к разрешению")
+    partner_data_access: Optional[bool] = Field(None, description="Доступ к партнёрским данным")
+    access_filters: Optional[list] = Field(None, description="Фильтры доступа для разрешения")
 
 
 class GrantRequest(MetrikaBaseModel):
     """Запрос на создание/изменение разрешения."""
 
-    grant: Grant
+    grant: Grant = Field(..., description="Данные разрешения для создания или обновления")
 
 
 class GrantsResponse(MetrikaBaseModel):
     """Ответ списка разрешений."""
 
-    grants: Optional[list[Grant]] = None
+    grants: Optional[list[Grant]] = Field(None, description="Список разрешений")
 
 
 class GrantResponse(MetrikaBaseModel):
     """Ответ с одним разрешением."""
 
-    grant: Optional[Grant] = None
+    grant: Optional[Grant] = Field(None, description="Данные разрешения")
 
 
 # ── Operation ─────────────────────────────────────────────────────
@@ -218,29 +218,29 @@ class GrantResponse(MetrikaBaseModel):
 class OperationE(MetrikaBaseModel):
     """Операция над данными счётчика."""
 
-    id: Optional[int] = None
-    action: Optional[str] = None
-    attr: Optional[str] = None
-    value: Optional[str] = None
-    status: Optional[str] = None
+    id: Optional[int] = Field(None, description="Идентификатор операции")
+    action: Optional[str] = Field(None, description="Действие (cut_fragment/cut_parameter/replace_domain и др.)")
+    attr: Optional[str] = Field(None, description="Атрибут (referer/url)")
+    value: Optional[str] = Field(None, description="Значение операции")
+    status: Optional[str] = Field(None, description="Статус (active/disabled)")
 
 
 class OperationRequest(MetrikaBaseModel):
     """Запрос на создание/изменение операции."""
 
-    operation: OperationE
+    operation: OperationE = Field(..., description="Данные операции для создания или обновления")
 
 
 class OperationsResponse(MetrikaBaseModel):
     """Ответ списка операций."""
 
-    operations: Optional[list[OperationE]] = None
+    operations: Optional[list[OperationE]] = Field(None, description="Список операций")
 
 
 class OperationResponse(MetrikaBaseModel):
     """Ответ с одной операцией."""
 
-    operation: Optional[OperationE] = None
+    operation: Optional[OperationE] = Field(None, description="Данные операции")
 
 
 # ── Segment ───────────────────────────────────────────────────────
@@ -249,31 +249,31 @@ class OperationResponse(MetrikaBaseModel):
 class Segment(MetrikaBaseModel):
     """API-сегмент."""
 
-    segment_id: Optional[int] = None
-    counter_id: Optional[int] = None
-    name: Optional[str] = None
-    expression: Optional[str] = None
-    status: Optional[str] = None
-    segment_source: Optional[str] = None
-    create_time: Optional[str] = None
+    segment_id: Optional[int] = Field(None, description="Идентификатор сегмента")
+    counter_id: Optional[int] = Field(None, description="Идентификатор счётчика")
+    name: Optional[str] = Field(None, description="Название сегмента")
+    expression: Optional[str] = Field(None, description="Выражение сегмента")
+    status: Optional[str] = Field(None, description="Статус сегмента (active/deleted)")
+    segment_source: Optional[str] = Field(None, description="Источник создания сегмента")
+    create_time: Optional[str] = Field(None, description="Дата и время создания")
 
 
 class SegmentRequest(MetrikaBaseModel):
     """Запрос на создание/изменение сегмента."""
 
-    segment: Segment
+    segment: Segment = Field(..., description="Данные сегмента для создания или обновления")
 
 
 class SegmentsResponse(MetrikaBaseModel):
     """Ответ списка сегментов."""
 
-    segments: Optional[list[Segment]] = None
+    segments: Optional[list[Segment]] = Field(None, description="Список сегментов")
 
 
 class SegmentResponse(MetrikaBaseModel):
     """Ответ с одним сегментом."""
 
-    segment: Optional[Segment] = None
+    segment: Optional[Segment] = Field(None, description="Данные сегмента")
 
 
 # ── Label ─────────────────────────────────────────────────────────
@@ -282,26 +282,26 @@ class SegmentResponse(MetrikaBaseModel):
 class Label(MetrikaBaseModel):
     """Метка для счётчиков."""
 
-    id: Optional[int] = None
-    name: Optional[str] = None
+    id: Optional[int] = Field(None, description="Идентификатор метки")
+    name: Optional[str] = Field(None, description="Название метки")
 
 
 class LabelRequest(MetrikaBaseModel):
     """Запрос на создание/изменение метки."""
 
-    label: Label
+    label: Label = Field(..., description="Данные метки для создания или обновления")
 
 
 class LabelsResponse(MetrikaBaseModel):
     """Ответ списка меток."""
 
-    labels: Optional[list[Label]] = None
+    labels: Optional[list[Label]] = Field(None, description="Список меток")
 
 
 class LabelResponse(MetrikaBaseModel):
     """Ответ с одной меткой."""
 
-    label: Optional[Label] = None
+    label: Optional[Label] = Field(None, description="Данные метки")
 
 
 # ── Account ───────────────────────────────────────────────────────
@@ -310,14 +310,14 @@ class LabelResponse(MetrikaBaseModel):
 class Account(MetrikaBaseModel):
     """Аккаунт."""
 
-    user_login: Optional[str] = None
-    created_at: Optional[str] = None
+    user_login: Optional[str] = Field(None, description="Логин пользователя Яндекса")
+    created_at: Optional[str] = Field(None, description="Дата создания аккаунта")
 
 
 class AccountsResponse(MetrikaBaseModel):
     """Ответ списка аккаунтов."""
 
-    accounts: Optional[list[Account]] = None
+    accounts: Optional[list[Account]] = Field(None, description="Список аккаунтов")
 
 
 # ── Delegate ──────────────────────────────────────────────────────
@@ -326,21 +326,21 @@ class AccountsResponse(MetrikaBaseModel):
 class Delegate(MetrikaBaseModel):
     """Представитель."""
 
-    user_login: Optional[str] = None
-    created_at: Optional[str] = None
-    comment: Optional[str] = None
+    user_login: Optional[str] = Field(None, description="Логин представителя")
+    created_at: Optional[str] = Field(None, description="Дата добавления представителя")
+    comment: Optional[str] = Field(None, description="Комментарий")
 
 
 class DelegateRequest(MetrikaBaseModel):
     """Запрос на добавление представителя."""
 
-    delegate: Delegate
+    delegate: Delegate = Field(..., description="Данные представителя для добавления")
 
 
 class DelegatesResponse(MetrikaBaseModel):
     """Ответ списка представителей."""
 
-    delegates: Optional[list[Delegate]] = None
+    delegates: Optional[list[Delegate]] = Field(None, description="Список представителей")
 
 
 # ── Chart Annotation ──────────────────────────────────────────────
@@ -349,30 +349,30 @@ class DelegatesResponse(MetrikaBaseModel):
 class ChartAnnotation(MetrikaBaseModel):
     """Примечание на графике."""
 
-    id: Optional[int] = None
-    date: Optional[str] = None
-    time: Optional[str] = None
-    title: Optional[str] = None
-    message: Optional[str] = None
-    group: Optional[str] = None
+    id: Optional[int] = Field(None, description="Идентификатор примечания")
+    date: Optional[str] = Field(None, description="Дата примечания (YYYY-MM-DD)")
+    time: Optional[str] = Field(None, description="Время примечания")
+    title: Optional[str] = Field(None, description="Заголовок примечания")
+    message: Optional[str] = Field(None, description="Текст примечания")
+    group: Optional[str] = Field(None, description="Группа (A/B/C/D/E/HOLIDAY)")
 
 
 class ChartAnnotationRequest(MetrikaBaseModel):
     """Запрос на создание/изменение примечания."""
 
-    chart_annotation: ChartAnnotation
+    chart_annotation: ChartAnnotation = Field(..., description="Данные примечания для создания или обновления")
 
 
 class ChartAnnotationsResponse(MetrikaBaseModel):
     """Ответ списка примечаний."""
 
-    chart_annotations: Optional[list[ChartAnnotation]] = None
+    chart_annotations: Optional[list[ChartAnnotation]] = Field(None, description="Список примечаний")
 
 
 class ChartAnnotationResponse(MetrikaBaseModel):
     """Ответ с одним примечанием."""
 
-    chart_annotation: Optional[ChartAnnotation] = None
+    chart_annotation: Optional[ChartAnnotation] = Field(None, description="Данные примечания")
 
 
 # ── Access Filter ─────────────────────────────────────────────────
@@ -381,28 +381,28 @@ class ChartAnnotationResponse(MetrikaBaseModel):
 class AccessFilter(MetrikaBaseModel):
     """Фильтр доступа."""
 
-    id: Optional[int] = None
-    name: Optional[str] = None
-    expression: Optional[str] = None
-    interface_value: Optional[str] = None
+    id: Optional[int] = Field(None, description="Идентификатор фильтра доступа")
+    name: Optional[str] = Field(None, description="Название фильтра доступа")
+    expression: Optional[str] = Field(None, description="Выражение фильтра доступа")
+    interface_value: Optional[str] = Field(None, description="Значение для интерфейса")
 
 
 class AccessFilterRequest(MetrikaBaseModel):
     """Запрос на создание/изменение фильтра доступа."""
 
-    access_filter: AccessFilter
+    access_filter: AccessFilter = Field(..., description="Данные фильтра доступа для создания или обновления")
 
 
 class AccessFiltersResponse(MetrikaBaseModel):
     """Ответ списка фильтров доступа."""
 
-    access_filters: Optional[list[AccessFilter]] = None
+    access_filters: Optional[list[AccessFilter]] = Field(None, description="Список фильтров доступа")
 
 
 class AccessFilterResponse(MetrikaBaseModel):
     """Ответ с одним фильтром доступа."""
 
-    access_filter: Optional[AccessFilter] = None
+    access_filter: Optional[AccessFilter] = Field(None, description="Данные фильтра доступа")
 
 
 # ── Log Request ───────────────────────────────────────────────────
@@ -411,41 +411,41 @@ class AccessFilterResponse(MetrikaBaseModel):
 class LogRequest(MetrikaBaseModel):
     """Запрос логов (Logs API)."""
 
-    request_id: Optional[int] = None
-    counter_id: Optional[int] = None
-    source: Optional[str] = None
-    date1: Optional[str] = None
-    date2: Optional[str] = None
-    fields: Optional[list[str]] = None
-    status: Optional[str] = None
-    size: Optional[int] = None
-    attribution: Optional[str] = None
-    parts: Optional[list] = None
+    request_id: Optional[int] = Field(None, description="Идентификатор запроса логов")
+    counter_id: Optional[int] = Field(None, description="Идентификатор счётчика")
+    source: Optional[str] = Field(None, description="Источник данных (hits/visits)")
+    date1: Optional[str] = Field(None, description="Начальная дата (YYYY-MM-DD)")
+    date2: Optional[str] = Field(None, description="Конечная дата (YYYY-MM-DD)")
+    fields: Optional[list[str]] = Field(None, description="Список запрошенных полей")
+    status: Optional[str] = Field(None, description="Статус запроса (created/processed/cleaned_by_user и др.)")
+    size: Optional[int] = Field(None, description="Размер данных в байтах")
+    attribution: Optional[str] = Field(None, description="Модель атрибуции (FIRST/LAST/LASTSIGN и др.)")
+    parts: Optional[list] = Field(None, description="Список частей для скачивания")
 
 
 class LogRequestResponse(MetrikaBaseModel):
     """Ответ с информацией о запросе логов."""
 
-    log_request: Optional[LogRequest] = None
+    log_request: Optional[LogRequest] = Field(None, description="Данные запроса логов")
 
 
 class LogRequestsResponse(MetrikaBaseModel):
     """Ответ списка запросов логов."""
 
-    requests: Optional[list[LogRequest]] = None
+    requests: Optional[list[LogRequest]] = Field(None, description="Список запросов логов")
 
 
 class LogRequestEvaluation(MetrikaBaseModel):
     """Оценка возможности запроса логов."""
 
-    possible: Optional[bool] = None
-    max_possible_day_quantity: Optional[int] = None
+    possible: Optional[bool] = Field(None, description="Возможен ли запрос логов")
+    max_possible_day_quantity: Optional[int] = Field(None, description="Максимальное количество дней для запроса")
 
 
 class LogRequestEvaluationResponse(MetrikaBaseModel):
     """Ответ оценки запроса логов."""
 
-    log_request_evaluation: Optional[LogRequestEvaluation] = None
+    log_request_evaluation: Optional[LogRequestEvaluation] = Field(None, description="Результат оценки запроса логов")
 
 
 # ── Report Data ───────────────────────────────────────────────────
@@ -454,106 +454,106 @@ class LogRequestEvaluationResponse(MetrikaBaseModel):
 class ReportQuery(MetrikaBaseModel):
     """Параметры запроса отчёта."""
 
-    ids: Optional[list[int]] = None
-    dimensions: Optional[list[str]] = None
-    metrics: Optional[list[str]] = None
-    sort: Optional[list[str]] = None
-    date1: Optional[str] = None
-    date2: Optional[str] = None
-    limit: Optional[int] = None
-    offset: Optional[int] = None
-    filters: Optional[str] = None
-    preset: Optional[str] = None
+    ids: Optional[list[int]] = Field(None, description="Идентификаторы счётчиков")
+    dimensions: Optional[list[str]] = Field(None, description="Список измерений")
+    metrics: Optional[list[str]] = Field(None, description="Список метрик")
+    sort: Optional[list[str]] = Field(None, description="Список полей сортировки")
+    date1: Optional[str] = Field(None, description="Начальная дата")
+    date2: Optional[str] = Field(None, description="Конечная дата")
+    limit: Optional[int] = Field(None, description="Максимальное количество строк")
+    offset: Optional[int] = Field(None, description="Смещение для пагинации")
+    filters: Optional[str] = Field(None, description="Выражение фильтра")
+    preset: Optional[str] = Field(None, description="Название пресета отчёта")
 
 
 class StatRow(MetrikaBaseModel):
     """Строка табличного отчёта."""
 
-    dimensions: Optional[list[dict]] = None
-    metrics: Optional[list[float]] = None
+    dimensions: Optional[list[dict]] = Field(None, description="Значения измерений строки")
+    metrics: Optional[list[float]] = Field(None, description="Значения метрик строки")
 
 
 class ReportResponse(MetrikaBaseModel):
     """Ответ табличного отчёта."""
 
-    query: Optional[ReportQuery] = None
-    data: Optional[list[StatRow]] = None
-    total_rows: Optional[int] = None
-    total_rows_rounded: Optional[bool] = None
-    sampled: Optional[bool] = None
-    sample_share: Optional[float] = None
-    sample_size: Optional[int] = None
-    sample_space: Optional[int] = None
-    data_lag: Optional[int] = None
-    totals: Optional[list[float]] = None
-    min: Optional[list[float]] = None
-    max: Optional[list[float]] = None
+    query: Optional[ReportQuery] = Field(None, description="Параметры выполненного запроса")
+    data: Optional[list[StatRow]] = Field(None, description="Строки данных отчёта")
+    total_rows: Optional[int] = Field(None, description="Общее количество строк")
+    total_rows_rounded: Optional[bool] = Field(None, description="Округлено ли количество строк")
+    sampled: Optional[bool] = Field(None, description="Использовалась ли выборка")
+    sample_share: Optional[float] = Field(None, description="Доля выборки (0.0-1.0)")
+    sample_size: Optional[int] = Field(None, description="Размер выборки")
+    sample_space: Optional[int] = Field(None, description="Общий объём данных")
+    data_lag: Optional[int] = Field(None, description="Задержка данных в секундах")
+    totals: Optional[list[float]] = Field(None, description="Итоговые значения метрик")
+    min: Optional[list[float]] = Field(None, description="Минимальные значения метрик")
+    max: Optional[list[float]] = Field(None, description="Максимальные значения метрик")
 
 
 class DrillDownRow(MetrikaBaseModel):
     """Строка drill down отчёта."""
 
-    dimension: Optional[dict] = None
-    metrics: Optional[list[float]] = None
-    expand: Optional[bool] = None
+    dimension: Optional[dict] = Field(None, description="Значение измерения строки")
+    metrics: Optional[list[float]] = Field(None, description="Значения метрик строки")
+    expand: Optional[bool] = Field(None, description="Можно ли раскрыть строку глубже")
 
 
 class DrillDownReportResponse(MetrikaBaseModel):
     """Ответ drill down отчёта."""
 
-    query: Optional[ReportQuery] = None
-    data: Optional[list[DrillDownRow]] = None
-    total_rows: Optional[int] = None
-    totals: Optional[list[float]] = None
-    min: Optional[list[float]] = None
-    max: Optional[list[float]] = None
-    sampled: Optional[bool] = None
-    sample_share: Optional[float] = None
-    sample_size: Optional[int] = None
-    sample_space: Optional[int] = None
-    data_lag: Optional[int] = None
+    query: Optional[ReportQuery] = Field(None, description="Параметры выполненного запроса")
+    data: Optional[list[DrillDownRow]] = Field(None, description="Строки данных отчёта")
+    total_rows: Optional[int] = Field(None, description="Общее количество строк")
+    totals: Optional[list[float]] = Field(None, description="Итоговые значения метрик")
+    min: Optional[list[float]] = Field(None, description="Минимальные значения метрик")
+    max: Optional[list[float]] = Field(None, description="Максимальные значения метрик")
+    sampled: Optional[bool] = Field(None, description="Использовалась ли выборка")
+    sample_share: Optional[float] = Field(None, description="Доля выборки (0.0-1.0)")
+    sample_size: Optional[int] = Field(None, description="Размер выборки")
+    sample_space: Optional[int] = Field(None, description="Общий объём данных")
+    data_lag: Optional[int] = Field(None, description="Задержка данных в секундах")
 
 
 class ComparisonRow(MetrikaBaseModel):
     """Строка сравнительного отчёта."""
 
-    dimensions: Optional[list[dict]] = None
-    metrics: Optional[dict] = None
+    dimensions: Optional[list[dict]] = Field(None, description="Значения измерений строки")
+    metrics: Optional[dict] = Field(None, description="Значения метрик по сегментам (a/b)")
 
 
 class ComparisonReportResponse(MetrikaBaseModel):
     """Ответ сравнительного отчёта."""
 
-    query: Optional[ReportQuery] = None
-    data: Optional[list[ComparisonRow]] = None
-    total_rows: Optional[int] = None
-    totals: Optional[dict] = None
-    sampled: Optional[bool] = None
-    sample_share: Optional[float] = None
-    sample_size: Optional[int] = None
-    sample_space: Optional[int] = None
-    data_lag: Optional[int] = None
+    query: Optional[ReportQuery] = Field(None, description="Параметры выполненного запроса")
+    data: Optional[list[ComparisonRow]] = Field(None, description="Строки данных отчёта")
+    total_rows: Optional[int] = Field(None, description="Общее количество строк")
+    totals: Optional[dict] = Field(None, description="Итоговые значения метрик по сегментам")
+    sampled: Optional[bool] = Field(None, description="Использовалась ли выборка")
+    sample_share: Optional[float] = Field(None, description="Доля выборки (0.0-1.0)")
+    sample_size: Optional[int] = Field(None, description="Размер выборки")
+    sample_space: Optional[int] = Field(None, description="Общий объём данных")
+    data_lag: Optional[int] = Field(None, description="Задержка данных в секундах")
 
 
 class ByTimeRow(MetrikaBaseModel):
     """Строка отчёта по времени."""
 
-    dimensions: Optional[list[dict]] = None
-    metrics: Optional[list[list[float]]] = None
+    dimensions: Optional[list[dict]] = Field(None, description="Значения измерений строки")
+    metrics: Optional[list[list[float]]] = Field(None, description="Временные ряды значений метрик")
 
 
 class ByTimeReportResponse(MetrikaBaseModel):
     """Ответ отчёта по времени."""
 
-    query: Optional[ReportQuery] = None
-    data: Optional[list[ByTimeRow]] = None
-    total_rows: Optional[int] = None
-    totals: Optional[list[list[float]]] = None
-    sampled: Optional[bool] = None
-    sample_share: Optional[float] = None
-    sample_size: Optional[int] = None
-    sample_space: Optional[int] = None
-    data_lag: Optional[int] = None
+    query: Optional[ReportQuery] = Field(None, description="Параметры выполненного запроса")
+    data: Optional[list[ByTimeRow]] = Field(None, description="Строки данных отчёта")
+    total_rows: Optional[int] = Field(None, description="Общее количество строк")
+    totals: Optional[list[list[float]]] = Field(None, description="Итоговые временные ряды метрик")
+    sampled: Optional[bool] = Field(None, description="Использовалась ли выборка")
+    sample_share: Optional[float] = Field(None, description="Доля выборки (0.0-1.0)")
+    sample_size: Optional[int] = Field(None, description="Размер выборки")
+    sample_space: Optional[int] = Field(None, description="Общий объём данных")
+    data_lag: Optional[int] = Field(None, description="Задержка данных в секундах")
 
 
 # ── Upload Responses ──────────────────────────────────────────────
@@ -562,28 +562,28 @@ class ByTimeReportResponse(MetrikaBaseModel):
 class UploadInfo(MetrikaBaseModel):
     """Информация о загрузке данных."""
 
-    id: Optional[int] = None
-    create_time: Optional[str] = None
-    source_quantity: Optional[int] = None
-    line_quantity: Optional[int] = None
-    provider: Optional[str] = None
-    comment: Optional[str] = None
-    type: Optional[str] = None
-    status: Optional[str] = None
-    content_id_type: Optional[str] = None
-    action: Optional[str] = None
+    id: Optional[int] = Field(None, description="Идентификатор загрузки")
+    create_time: Optional[str] = Field(None, description="Дата и время создания загрузки")
+    source_quantity: Optional[int] = Field(None, description="Количество записей в источнике")
+    line_quantity: Optional[int] = Field(None, description="Количество обработанных строк")
+    provider: Optional[str] = Field(None, description="Провайдер данных")
+    comment: Optional[str] = Field(None, description="Комментарий к загрузке")
+    type: Optional[str] = Field(None, description="Тип загрузки")
+    status: Optional[str] = Field(None, description="Статус загрузки")
+    content_id_type: Optional[str] = Field(None, description="Тип идентификатора контента")
+    action: Optional[str] = Field(None, description="Действие загрузки")
 
 
 class UploadResponse(MetrikaBaseModel):
     """Ответ загрузки данных."""
 
-    uploading: Optional[UploadInfo] = None
+    uploading: Optional[UploadInfo] = Field(None, description="Данные загрузки")
 
 
 class UploadListResponse(MetrikaBaseModel):
     """Ответ списка загрузок."""
 
-    uploadings: Optional[list[UploadInfo]] = None
+    uploadings: Optional[list[UploadInfo]] = Field(None, description="Список загрузок")
 
 
 # ── Success Response ──────────────────────────────────────────────
@@ -592,7 +592,7 @@ class UploadListResponse(MetrikaBaseModel):
 class SuccessResponse(MetrikaBaseModel):
     """Стандартный ответ успешной операции."""
 
-    success: Optional[bool] = None
+    success: Optional[bool] = Field(None, description="Признак успешного выполнения операции")
 
 
 # ── Parameter Models (for action registry) ───────────────────────
