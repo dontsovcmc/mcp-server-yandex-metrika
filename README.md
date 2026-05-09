@@ -2,7 +2,7 @@
 
 # mcp-server-yandex-metrika
 
-[![Version](https://img.shields.io/badge/version-0.2.3-blue)](https://github.com/dontsovcmc/mcp-server-yandex-metrika)
+[![Version](https://img.shields.io/badge/version-0.2.4-blue)](https://github.com/dontsovcmc/mcp-server-yandex-metrika)
 
 MCP-сервер, CLI-утилита и библиотека Pydantic-моделей для [API Яндекс Метрики](https://yandex.com/dev/metrika).
 
