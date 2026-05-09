@@ -58,6 +58,21 @@ def main(argv: list[str] | None = None):
     p_goals = sub.add_parser("goals", help="Список целей")
     p_goals.add_argument("counter_id", type=int)
 
+    # ── Segments ──────────────────────────────────────────────────
+    p_segments = sub.add_parser("segments", help="Список сегментов")
+    p_segments.add_argument("counter_id", type=int)
+
+    # ── Grants ────────────────────────────────────────────────────
+    p_grants = sub.add_parser("grants", help="Список доступов")
+    p_grants.add_argument("counter_id", type=int)
+
+    # ── Log requests ──────────────────────────────────────────────
+    p_logreq = sub.add_parser("log-requests", help="Список запросов Logs API")
+    p_logreq.add_argument("counter_id", type=int)
+
+    # ── Labels ────────────────────────────────────────────────────
+    sub.add_parser("labels", help="Список меток")
+
     # ── Search / Execute ──────────────────────────────────────────
     p_search = sub.add_parser("search", help="Поиск действий")
     p_search.add_argument("query")
@@ -66,6 +81,11 @@ def main(argv: list[str] | None = None):
     p_exec = sub.add_parser("execute", help="Выполнить действие")
     p_exec.add_argument("action")
     p_exec.add_argument("--params", default="{}")
+
+    p_exec_file = sub.add_parser("execute-file", help="Выполнить файловое действие")
+    p_exec_file.add_argument("action")
+    p_exec_file.add_argument("file_path")
+    p_exec_file.add_argument("--params", default="{}")
 
     args = parser.parse_args(argv)
 
@@ -90,8 +110,13 @@ def main(argv: list[str] | None = None):
         ),
         "counter": lambda: server.ym_counter(args.counter_id, args.field),
         "goals": lambda: server.ym_goals(args.counter_id),
+        "segments": lambda: server.ym_segments(args.counter_id),
+        "grants": lambda: server.ym_grants(args.counter_id),
+        "log-requests": lambda: server.ym_log_requests(args.counter_id),
+        "labels": lambda: server.ym_labels(),
         "search": lambda: server.ym_search(args.query, args.domain),
         "execute": lambda: server.ym_execute(args.action, args.params),
+        "execute-file": lambda: server.ym_execute_file(args.action, args.file_path, args.params),
     }
 
     handler = handlers[args.command]
