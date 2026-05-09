@@ -4,7 +4,7 @@ import sys
 
 from dotenv import load_dotenv
 
-__version__ = "0.2.2"
+__version__ = "0.2.3"
 
 
 def _load_env() -> None:
