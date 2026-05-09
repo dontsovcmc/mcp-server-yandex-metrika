@@ -5,6 +5,7 @@ Base URL: https://api-metrika.yandex.net
 """
 
 import logging
+import os
 
 import httpx
 
@@ -23,12 +24,14 @@ class MetrikaAPI:
     """Асинхронный клиент API Яндекс Метрики."""
 
     def __init__(self, token: str):
+        self.timeout = int(os.getenv("METRIKA_TIMEOUT", "30"))
+        self.file_timeout = int(os.getenv("METRIKA_FILE_TIMEOUT", "60"))
         self.client = httpx.AsyncClient(
             headers={
                 "Authorization": f"OAuth {token}",
                 "Content-Type": "application/x-yametrika+json",
             },
-            timeout=30,
+            timeout=self.timeout,
         )
         log.info("Яндекс Метрика клиент инициализирован")
 
@@ -67,7 +70,7 @@ class MetrikaAPI:
     async def _post_file(self, path: str, file_data: bytes, content_type: str = "text/csv", **kwargs) -> dict:
         headers = {**self.client.headers, "Content-Type": content_type}
         resp = await self.client.post(
-            f"{BASE_URL}{path}", content=file_data, headers=headers, timeout=60, **kwargs,
+            f"{BASE_URL}{path}", content=file_data, headers=headers, timeout=self.file_timeout, **kwargs,
         )
         if not resp.is_success:
             log.debug("POST %s -> %d: %s", path, resp.status_code, resp.text)
@@ -76,7 +79,7 @@ class MetrikaAPI:
         return resp.json()
 
     async def _get_raw(self, path: str, **kwargs) -> bytes:
-        resp = await self.client.get(f"{BASE_URL}{path}", timeout=60, **kwargs)
+        resp = await self.client.get(f"{BASE_URL}{path}", timeout=self.file_timeout, **kwargs)
         if not resp.is_success:
             log.debug("GET %s -> %d: %s", path, resp.status_code, resp.text)
             msg = _ERROR_MESSAGES.get(resp.status_code, f"GET {path} -> {resp.status_code}")

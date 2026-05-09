@@ -25,6 +25,7 @@ mcp-server-yandex-metrika --env /path/to/.env counters
 ### Запуск тестов
 
 ```bash
+ruff check src/ tests/
 pytest tests/ -v
 ```
 
@@ -52,6 +53,14 @@ src/mcp_server_yandex_metrika/
 - Base URL: `https://api-metrika.yandex.net`
 - Авторизация: OAuth 2.0 (Bearer token)
 
+### Переменные окружения
+
+| Переменная | Обязательная | По умолчанию | Описание |
+|------------|:------------:|:------------:|----------|
+| `YANDEX_METRIKA_TOKEN` | да | — | OAuth-токен Яндекс Метрики |
+| `METRIKA_TIMEOUT` | нет | `30` | Таймаут HTTP-запросов (секунды) |
+| `METRIKA_FILE_TIMEOUT` | нет | `60` | Таймаут файловых операций (секунды) |
+
 ### Обновление MCP-сервера
 
 Когда пользователь просит "обнови mcp yandex-metrika":
@@ -67,20 +76,19 @@ src/mcp_server_yandex_metrika/
    ```bash
    mcp-server-yandex-metrika --version 2>/dev/null || python -c "import mcp_server_yandex_metrika; print(mcp_server_yandex_metrika.__version__)"
    ```
-4. Сообщить пользователю новую версию и попросить перезапустить Claude Code.
+4. Сообщить пользователю новую версию и попросить перезапустить Claude Code (MCP-серверы перезапускаются при рестарте).
+
+### README.md
+
+При изменениях в коде обновлять [README.md](README.md):
+- **Новый инструмент** — добавить строку в таблицу «Возможности» (MCP tool + CLI команда + описание).
+- **Новая CLI-команда** — добавить в раздел «CLI-режим» → «Команды».
+- **Новая переменная окружения** — добавить в таблицу «Переменные окружения».
+- **Новый релиз** — обновить версию в бейджике.
 
 ### Правила кода
 
-**Полные правила кода — в [development.md](development.md) (раздел "Правила кода").** Ключевое:
-
-- Пути для записи файлов — только через `_safe_output_path()` (home или temp). Dotfiles под home запрещены (`~/.ssh`, `~/.bashrc`).
-- JSON от пользователя — только через `_parse_json()`, не голый `json.loads()`.
-- **НИКОГДА не включать `resp.text` в исключения** — может содержать PII. Только метод, путь, статус-код.
-- Никогда не глотать исключения молча — всегда `log.warning()` с контекстом.
-- Хелперы с читаемыми именами: `_to_json`, не `_j`.
-- HTTP-запросы через хелперы `_get()/_post()/_put()/_delete()`, не ручные `session.get()`.
-- stdout зарезервирован для JSON-RPC — для логов использовать только stderr.
-- **Линтер:** `ruff check src/ tests/` должен проходить без ошибок перед коммитом.
+**Полные правила кода — в [development.md](development.md) (раздел "Правила кода").**
 
 ### Правила Git и workflow
 
@@ -95,4 +103,13 @@ src/mcp_server_yandex_metrika/
 - **NEVER use merge commits. ALWAYS rebase.**
 - **CRITICAL: НИКОГДА не читать содержимое `.env` файлов** — запрещено использовать `cat`, `Read`, `grep`, `head`, `tail` и любые другие способы чтения `.env`. Для загрузки переменных использовать **только** `source <path>/.env`. Для проверки наличия файла — только `test -f`. Для проверки наличия переменной — `source .env && test -n "$VAR_NAME"` (без вывода значения).
 - **ПЕРЕД КАЖДЫМ КОММИТОМ** проверять все исходные файлы, тесты и документацию на наличие реальных персональных данных (ИНН, номера счетов, имена, адреса, телефоны, email). Заменять на вымышленные.
-- **В КАЖДОМ PR** обновлять версию в `pyproject.toml` и `src/mcp_server_yandex_metrika/__init__.py` (patch для фиксов, minor для новых фич).
+- **В КАЖДОМ PR** обновлять версию в `pyproject.toml`, `src/mcp_server_yandex_metrika/__init__.py` и `server.json` (patch для фиксов, minor для новых фич).
+- **ПЕРЕД публикацией в MCP-реестр** обязательно запускать `mcp-publisher validate` — проверяет `server.json` на соответствие схеме реестра.
+
+### Публикация версии
+
+Валидация, сборка, загрузка в PyPI и публикация в MCP Registry — одной командой:
+
+```bash
+mcp-publisher validate && python3 -m build && twine upload dist/* && rm -rf ./dist && mcp-publisher login github && mcp-publisher publish
+```
